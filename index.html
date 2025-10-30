@@ -7,7 +7,7 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <link rel="stylesheet" href="styles.css?v=4.0"/>
+  <link rel="stylesheet" href="styles.css?v=4.6"/>
 </head>
 <body>
 <div id="app">
@@ -15,7 +15,7 @@
     <div class="brand">
       <img id="brandLogo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScxODAnIGhlaWdodD0nNDgnIHZpZXdCb3g9JzAgMCAxODAgNDgnPgogIDxyZWN0IHdpZHRoPScxODAnIGhlaWdodD0nNDgnIHJ4PScxMCcgZmlsbD0nI2ZmZmZmZicvPgogIDxyZWN0IHg9JzQnIHk9JzQnIHdpZHRoPScxNzInIGhlaWdodD0nNDAnIHJ4PSc4JyBmaWxsPScjZDAwJyBvcGFjaXR5PScwLjA4Jy8+CiAgPHRleHQgeD0nMTQnIHk9JzMwJyBmb250LXNpemU9JzIwJyBmaWxsPScjMTExJyBmb250LWZhbWlseT0nQXJpYWwgQmxhY2ssIEFyaWFsJz5ESU5BTUlUQTwvdGV4dD4KICA8dGV4dCB4PScxMjAnIHk9JzMwJyBmb250LXNpemU9JzE2JyBmaWxsPScjZDAwJyBmb250LWZhbWlseT0nQXJpYWwgQmxhY2ssIEFyaWFsJz5QT1M8L3RleHQ+Cjwvc3ZnPg==" />
       <div class="brand-title">DINAMITA POS</div>
-      <small class="brand-sub">v4.1 • 2025-10-30 12:00</small>
+      <small class="brand-sub">v4.6 • 2025-10-18 19:50</small>
     </div>
     <nav class="menu">
       <button data-view="dashboard" class="active">🏠 Dashboard</button>
@@ -123,7 +123,18 @@
 
         <div class="grid-2">
           <div></div>
-          <div class="right">
+          
+          <div class="grid-3">
+            <div>
+              <label>Pago con</label>
+              <select id="ventaPago">
+                <option value="efectivo" selected>Efectivo</option>
+                <option value="tarjeta">Tarjeta</option>
+                <option value="transferencia">Transferencia</option>
+              </select>
+            </div>
+          </div>
+<div class="right">
             <button class="btn" onclick="Ventas.confirmar()">✅ Confirmar venta</button>
           </div>
         </div>
@@ -157,7 +168,7 @@
     
     </section>
 
-    <section id=\"view-bodega\" class="view hidden">
+    <section id="view-bodega" class="view hidden">
       <div class="panel">
         <div class="panel-title">📥 Bodega · Entrada de mercancía</div>
         <div class="grid-3">
@@ -234,7 +245,9 @@
     </section>
 
     <section id="view-clientes"
-     class="view hidden">
+</section>
+
+    <section id="view-clientes" class="view hidden">
       <div class="panel">
         <div class="panel-title">👤 Clientes</div>
         <div class="grid-3">
@@ -269,8 +282,15 @@
           <div><label>Tipo</label><div style="display:flex;gap:8px"><select id="memTipo" onchange="Membresias.changeTipo()"></select><button class="btn small outline" onclick="Membresias.manageTipos()">⚙️ Tipos</button></div></div>
           <div><label>Inicio</label><input id="memInicio" type="date"></div>
           <div><label>Fin</label><input id="memFin" type="date"></div>
-          <div><label>Notas</label><input id="memNotas"></div>
-          <div class="right"><button class="btn" onclick="Membresias.guardar()">💾 Guardar</button> <button class="btn outline" onclick="Membresias.cobrarAqui()">💰 Cobrar aquí</button></div>
+          <div class="col-span-3"><label>Notas</label><input id="memNotas" placeholder="Notas de la membresía"></div>
+<div><label for="memPago">Pago con</label>
+  <select id="memPago" class="input">
+    <option value="efectivo" selected>Efectivo</option>
+    <option value="tarjeta">Tarjeta</option>
+    <option value="transferencia">Transferencia</option>
+  </select>
+</div>
+          <div class="right"><button class="btn" onclick="Membresias.guardar()">💾 Guardar</button> <button class="btn outline" onclick="Membresias.vender()">💰 Vender</button></div>
         </div>
       </div>
       <div class="panel">
@@ -310,6 +330,7 @@
             <label>A <input type="date" id="repVenFin"></label>
             <button class="btn small" onclick="Reportes.renderVentas()">Actualizar</button>
             <button class="btn small" onclick="Reportes.exportVentas()">📤 Exportar CSV</button>
+            <button class="btn small outline" onclick="Reportes.exportVentasDetallado()">📤 Exportar detallado</button>
           </div>
           <div id="repVenKpi" class="cards"></div>
           <div id="repVenTabla" class="table"></div>
@@ -430,7 +451,7 @@
 </main>
 </div>
 <script>const DEFAULT_LOGO = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScxODAnIGhlaWdodD0nNDgnIHZpZXdCb3g9JzAgMCAxODAgNDgnPgogIDxyZWN0IHdpZHRoPScxODAnIGhlaWdodD0nNDgnIHJ4PScxMCcgZmlsbD0nI2ZmZmZmZicvPgogIDxyZWN0IHg9JzQnIHk9JzQnIHdpZHRoPScxNzInIGhlaWdodD0nNDAnIHJ4PSc4JyBmaWxsPScjZDAwJyBvcGFjaXR5PScwLjA4Jy8+CiAgPHRleHQgeD0nMTQnIHk9JzMwJyBmb250LXNpemU9JzIwJyBmaWxsPScjMTExJyBmb250LWZhbWlseT0nQXJpYWwgQmxhY2ssIEFyaWFsJz5ESU5BTUlUQTwvdGV4dD4KICA8dGV4dCB4PScxMjAnIHk9JzMwJyBmb250LXNpemU9JzE2JyBmaWxsPScjZDAwJyBmb250LWZhbWlseT0nQXJpYWwgQmxhY2ssIEFyaWFsJz5QT1M8L3RleHQ+Cjwvc3ZnPg==";</script>
-<script src="app.js?v=4.1"></script>
+<script src="app.js?v=4.6"></script>
 <script>
 // drawer toggle
 document.addEventListener('DOMContentLoaded',()=>{
