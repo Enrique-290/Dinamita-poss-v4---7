@@ -100,7 +100,7 @@ function setCssVars(){
 const UI={
   init(){
     setCssVars();
-    document.querySelectorAll('.menu button').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.menu button').forEach(b=>b.onclick=()=>{ document.body.classList.remove('drawer-open');
       document.querySelectorAll('.menu button').forEach(x=>x.classList.remove('active'));
       b.classList.add('active');
       UI.show(b.dataset.view);
@@ -129,6 +129,7 @@ const UI={
     document.getElementById('view-'+id).classList.remove('hidden');
     if(id==='dashboard'){Dashboard.render();}
     if(id==='reportes'){Reportes.renderAll();}
+    if(id==='bodega'){Bodega.renderTabla();}
   }
 };
 
@@ -751,7 +752,7 @@ const Bodega={
   },
   exportCSV(){
     const rows=[['Folio','Fecha','Proveedor','Items','Total']]
-      .concat((state.entradas||[]).map(e=>[e.folio,e.fecha,(e.proveedor||''),e.items.map(i=>f"{i['nombre']} x{i['qty']} @ {i['costo']}").join('; '),e.total]));
+      .concat((state.entradas||[]).map(e=>[e.folio,e.fecha,(e.proveedor||''),e.items.map(i=>`${i.nombre} x${i.qty} @ ${i.costo}` ).join('; '),e.total]));
     downloadCSV('entradas_bodega.csv', rows);
   },
   sumarRapido(){
