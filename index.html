@@ -5,18 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>DINÁMITA POS v4.8 BODEGA</title>
   <meta name="theme-color" content="#111" />
-
-  <!-- Íconos y Manifest PWA -->
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" sizes="192x192" href="icon-192.png" />
   <link rel="icon" sizes="512x512" href="icon-512.png" />
-
-  <!-- Estilos -->
   <link rel="stylesheet" href="styles.css" />
 </head>
-
 <body>
-  <!-- ===== ENCABEZADO ===== -->
   <header>
     <button class="burger" id="btnBurger">☰</button>
     <div class="brand">
@@ -26,14 +20,13 @@
     <div class="brand-sub">“Gracias por tu compra en Dinamita Gym 💥”</div>
   </header>
 
-  <!-- ===== LAYOUT PRINCIPAL ===== -->
   <div class="layout">
-    <!-- Menú lateral -->
     <aside>
       <div class="menu">
         <div class="group">Navegación</div>
         <button data-view="dashboard" class="active">🏠 Dashboard</button>
         <button data-view="inventario">📦 Inventario</button>
+        <button data-view="ventas">🛒 Ventas</button>
         <button data-view="bodega">📥 Bodega</button>
         <button data-view="clientes">👥 Clientes</button>
         <button data-view="historial">🧾 Historial</button>
@@ -43,9 +36,7 @@
       </div>
     </aside>
 
-    <!-- Contenido principal -->
     <main id="views">
-      <!-- DASHBOARD -->
       <section id="view-dashboard" class="view show">
         <div class="panel">
           <div class="panel-title">🏠 Dashboard</div>
@@ -53,7 +44,6 @@
         </div>
       </section>
 
-      <!-- INVENTARIO -->
       <section id="view-inventario" class="view">
         <div class="panel">
           <div class="panel-title">📦 Inventario</div>
@@ -61,9 +51,48 @@
         </div>
       </section>
 
-      <!-- BODEGA -->
+      <section id="view-ventas" class="view">
+        <div class="panel">
+          <div class="panel-title">🛒 Ventas</div>
+          <div class="grid-3">
+            <div>
+              <label>Buscar producto</label>
+              <input id="venSearch" placeholder="🔎 Nombre / SKU" oninput="Ventas.buscarProducto(this.value)">
+              <div id="venResultados" class="list"></div>
+            </div>
+            <div class="col-span-2">
+              <label>Carrito</label>
+              <div id="venCarrito" class="table"></div>
+              <div class="right mt-2" style="gap:1rem">
+                <div style="margin-right:auto">
+                  <label>Cliente</label>
+                  <input id="venCliente" placeholder="Público General" />
+                </div>
+                <div>
+                  <label>Forma de pago</label>
+                  <select id="venPago">
+                    <option value="efectivo">Efectivo</option>
+                    <option value="tarjeta">Tarjeta</option>
+                    <option value="transferencia">Transferencia</option>
+                    <option value="otro">Otro</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Total</label>
+                  <input id="venTotal" readonly />
+                </div>
+                <button class="btn" onclick="Ventas.cobrar()">💳 Cobrar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">🧾 Ticket</div>
+          <div id="ticketArea" class="table"></div>
+        </div>
+      </section>
+
       <section id="view-bodega" class="view">
-        <!-- Entrada -->
         <div class="panel">
           <div class="panel-title">📥 Bodega · Entrada de mercancía</div>
           <div class="grid-3">
@@ -72,34 +101,17 @@
               <input id="bodSearch" placeholder="🔎 Nombre / SKU" oninput="Bodega.buscarProducto(this.value)">
               <div id="bodResultados" class="list"></div>
             </div>
-            <div>
-              <label>Cantidad</label>
-              <input id="bodQty" type="number" min="1" step="1" value="1">
-            </div>
-            <div>
-              <label>Costo unitario (MXN)</label>
-              <input id="bodCosto" type="number" min="0" step="0.01">
-            </div>
-            <div>
-              <label>Proveedor</label>
-              <input id="bodProveedor" placeholder="Opcional">
-            </div>
-            <div>
-              <label>Fecha</label>
-              <input id="bodFecha" type="date">
-            </div>
-            <div>
-              <label>Notas</label>
-              <input id="bodNotas" placeholder="Lote o detalles...">
-            </div>
+            <div><label>Cantidad</label><input id="bodQty" type="number" min="1" step="1" value="1"></div>
+            <div><label>Costo unitario (MXN)</label><input id="bodCosto" type="number" min="0" step="0.01"></div>
+            <div><label>Proveedor</label><input id="bodProveedor" placeholder="Opcional"></div>
+            <div><label>Fecha</label><input id="bodFecha" type="date"></div>
+            <div><label>Notas</label><input id="bodNotas" placeholder="Lote o detalles..."></div>
             <div class="col-span-3 right">
               <button class="btn small" onclick="Bodega.addToLote()">➕ Agregar al lote</button>
               <button class="btn small outline" onclick="Bodega.limpiar()">🧹 Limpiar</button>
             </div>
           </div>
         </div>
-
-        <!-- Lote actual -->
         <div class="panel">
           <div class="panel-title">🧺 Lote actual</div>
           <div id="bodLote" class="table"></div>
@@ -107,14 +119,10 @@
             <button class="btn" onclick="Bodega.confirmarEntrada()">✅ Confirmar entrada</button>
           </div>
         </div>
-
-        <!-- Listado -->
         <div class="panel">
           <div class="panel-title">🏷️ Listado de bodega</div>
           <div id="bodStockTabla" class="table"></div>
         </div>
-
-        <!-- Historial -->
         <div class="panel">
           <div class="panel-title">📜 Historial de entradas y salidas</div>
           <div class="filters">
@@ -125,8 +133,6 @@
           </div>
           <div id="bodTabla" class="table"></div>
         </div>
-
-        <!-- Sumar piezas rápido -->
         <div class="panel">
           <div class="panel-title">⚡ Sumar piezas rápido</div>
           <div class="grid-3">
@@ -135,10 +141,7 @@
               <input id="bodQuickSearch" placeholder="🔎 Nombre / SKU" oninput="Bodega.buscarProducto(this.value, true)">
               <div id="bodQuickResultados" class="list"></div>
             </div>
-            <div>
-              <label>+ Piezas</label>
-              <input id="bodQuickQty" type="number" min="1" step="1" value="1">
-            </div>
+            <div><label>+ Piezas</label><input id="bodQuickQty" type="number" min="1" step="1" value="1"></div>
             <div class="right">
               <label>&nbsp;</label>
               <button class="btn" onclick="Bodega.sumarRapido()">➕ Sumar al stock</button>
@@ -147,7 +150,6 @@
         </div>
       </section>
 
-      <!-- CLIENTES -->
       <section id="view-clientes" class="view">
         <div class="panel">
           <div class="panel-title">👥 Clientes</div>
@@ -160,17 +162,43 @@
             </div>
           </div>
         </div>
-
         <div class="panel">
           <div class="panel-title">Listado de clientes</div>
           <input id="cliSearch" placeholder="🔎 Buscar cliente" oninput="Clientes.renderTabla(this.value)">
           <div id="cliTabla" class="table"></div>
         </div>
       </section>
+
+      <section id="view-historial" class="view">
+        <div class="panel">
+          <div class="panel-title">🧾 Historial de ventas</div>
+          <div id="histTabla" class="table"></div>
+        </div>
+      </section>
+
+      <section id="view-reportes" class="view">
+        <div class="panel">
+          <div class="panel-title">📈 Reportes</div>
+          <p>Próximamente…</p>
+        </div>
+      </section>
+
+      <section id="view-config" class="view">
+        <div class="panel">
+          <div class="panel-title">⚙️ Configuración</div>
+          <p>Colores, impresora, etc. (placeholder)</p>
+        </div>
+      </section>
+
+      <section id="view-ticket" class="view">
+        <div class="panel">
+          <div class="panel-title">🧾 Ticket (ultima venta)</div>
+          <div id="ticketAreaSolo" class="table"></div>
+        </div>
+      </section>
     </main>
   </div>
 
-  <!-- Modal de transferencia -->
   <div id="modalTransfer" class="modal hidden" aria-hidden="true">
     <div class="modal-content">
       <div class="modal-head">
@@ -192,7 +220,6 @@
     </div>
   </div>
 
-  <!-- Scripts -->
   <script src="app.js"></script>
   <script>
     if ('serviceWorker' in navigator) {

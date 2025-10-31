@@ -1,7 +1,7 @@
 {
   "name": "DINÁMITA POS v4.8 BODEGA",
   "short_name": "Dinamita POS",
-  "description": "Punto de venta con módulo de bodega separado del inventario para Dinamita Gym.",
+  "description": "Punto de venta con módulo de bodega e inventario.",
   "start_url": "./index.html",
   "display": "standalone",
   "orientation": "portrait",
